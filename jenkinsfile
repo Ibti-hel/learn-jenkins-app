@@ -3,14 +3,14 @@ pipeline {
 
     stages {
         stage('build') {
-            agent{
-                docker{
+            agent {
+                docker {
                     image 'node:18-alpine'
                     reuseNode true
                 }
             }
             steps {
-                sh'''
+                sh '''
                 ls -la
                 node --version
                 npm --version
@@ -18,17 +18,16 @@ pipeline {
                 npm run build
                 ls -la
                 '''
-                
             }
         }
-        stage('test'){
-            agent{
-                docker{
+        stage('test') {
+            agent {
+                docker {
                     image 'node:18-alpine'
                     reuseNode true
                 }
             }
-            steps{
+            steps {
                 sh '''
                 test -f build/index.html
                 npm test
@@ -36,23 +35,24 @@ pipeline {
             }
         }
         stage('deploy') {
-            agent{
-                docker{
+            agent {
+                docker {
                     image 'node:18-alpine'
                     reuseNode true
                 }
             }
             steps {
-                sh'''
+                sh '''
                 npm install netlify-cli -g
                 netlify --version
                 '''
-                
             }
+        }
     }
-    post{
-        always{
-            
+
+    post {
+        always {
+            echo 'Cleaning up...'
         }
     }
 }
